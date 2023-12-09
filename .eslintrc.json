@@ -1,3 +1,22 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "plugin:tailwindcss/recommended"],
+  "root": true,
+  "plugins": ["tailwindcss"],
+  "rules": {
+    "tailwindcss/classnames-order": "error",
+    "tailwindcss/no-custom-classname": "off",
+    "tailwindcss/no-contradicting-classname": "error",
+    "tailwindcss/no-unknown-classname": "error"
+  },
+  "settings": {
+    "tailwindcss": {
+      "config": "tailwind.config.js",
+      "calless": ["cn"],
+      "groupings": {
+        "sm": ["sm", "md"],
+        "md": ["md", "lg"],
+        "lg": ["lg", "xl"]
+      }
+    }
+  }
 }
