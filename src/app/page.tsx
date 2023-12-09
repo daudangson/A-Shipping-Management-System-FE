@@ -1,5 +1,8 @@
 import Image from 'next/image';
 import Shipping from '../../public/shipping.jpg';
+import AboutUs from '../../public/about-us.jpg';
+import AboutUs1 from '../../public/about-us1.jpg';
+
 import { SearchRoutesForm } from '@/components/forms/form-search-routes';
 export default function Page() {
   return (
@@ -52,7 +55,7 @@ export default function Page() {
         <h1 className="text-center text-3xl font-bold">ABOUT US</h1>
         <div className="flex gap-4">
           <Image
-            src={Shipping.src}
+            src={AboutUs.src}
             alt="shipping line picture"
             width={500}
             height={500}
@@ -75,7 +78,7 @@ export default function Page() {
         </div>
         <div className="flex gap-4">
           <Image
-            src={Shipping.src}
+            src={AboutUs1.src}
             alt="shipping line picture"
             width={500}
             height={500}
