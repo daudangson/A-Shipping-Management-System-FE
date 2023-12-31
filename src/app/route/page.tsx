@@ -1,12 +1,43 @@
+'use client';
 import Image from 'next/image';
-import Shipping from '../../public/shipping.jpg';
-import AboutUs from '../../public/about-us.jpg';
-import AboutUs1 from '../../public/about-us1.jpg';
+import Shipping from '../../../public/shipping.jpg';
+import AboutUs from '../../../public/about-us.jpg';
+import AboutUs1 from '../../../public/about-us1.jpg';
+import { RouteDetailTable } from '@/components/table/table-route-detail';
+
 import { SearchRoutesForm } from '@/components/forms/form-search-routes';
+import { useState, useEffect } from 'react';
+import { metadata } from '../layout';
+// getstaticprops fetch data from api
+
+interface Route {
+  route: string;
+  references: String[];
+}
+
 export default function Page() {
+  const [routes, setRoutes] = useState<Route[]>([]);
+  const [routeDetail, setRouteDetail] = useState<any>();
+  const [ref, setRef] = useState<string>();
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      const res = await fetch('http://localhost:3001/api/v1/routes/metadata', {
+        method: 'GET'
+      });
+      const data = await res.json();
+      setRoutes(data?.metadata);
+    };
+    fetchRoutes();
+  }, []);
+
+  const handleDataFromChild = (value: any) => {
+    setRouteDetail(value);
+  };
+
+  console.log(routeDetail);
   return (
     <div className="text-sm">
-      <div className="relative w-full h-screen">
+      <div className="relative h-screen w-full">
         <Image
           src={Shipping.src}
           fill
@@ -17,50 +48,46 @@ export default function Page() {
         />
         <div className="absolute inset-0 z-[1] bg-slate-300" />
       </div>
+
       <section className="container p-10">
-        <div>
-          <h1 className="text-3xl font-bold text-center">SHIPPING LINES</h1>
-          <p className="text-lg text-center">
-            A world leading container fleet, a service network with disruption-free global coverage.
-          </p>
-        </div>
-        <div className="flex justify-around mt-10">
-          <div className="text-center">
-            <p className="text-2xl font-semibold ">144</p>
-            <p className="text-xs text-gray-500">Country/Region</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-semibold ">600</p>
-            <p className="text-xs text-gray-500">Ports</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-semibold ">700</p>
-            <p className="text-xs text-gray-500">Routes</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-semibold ">200</p>
-            <p className="text-xs text-gray-500">VESSELS</p>
-          </div>
+        <div className="mt-10 flex flex-col items-center gap-6 ">
+          <h1 className="text-center text-3xl font-bold">ROUTES</h1>
+          <SearchRoutesForm data={routes} onDataFromChild={handleDataFromChild} />
         </div>
       </section>
-      <section className="container p-10">
-        <div className="flex flex-col items-center gap-6 mt-10 ">
-          <h1 className="text-3xl font-bold text-center">ROUTES</h1>
-          {/* <SearchRoutesForm /> */}
-        </div>
-      </section>
-      <section className="container p-10 space-y-8">
+
+      {routeDetail?.image && (
+        <section className="container space-y-8 rounded-lg bg-slate-100 p-10">
+          <h1 className="text-center text-3xl font-bold">ROUTE DETAIL</h1>
+          {/* Route Image */}
+          <div className="flex justify-center pt-2">
+            <Image
+              src={routeDetail?.image}
+              alt="shipping line picture"
+              width={800}
+              height={800}
+              objectFit="cover"
+              objectPosition="center"
+            />
+          </div>
+          {/* Route Detail */}
+          <div className="flex justify-center pt-2">
+            <RouteDetailTable data={routeDetail?.table_data} />
+          </div>
+        </section>
+      )}
+
+      <section className="container space-y-8 p-10">
         {/* About us */}
-        <h1 className="text-3xl font-bold text-center">ABOUT US</h1>
+        <h1 className="text-center text-3xl font-bold">ABOUT US</h1>
         <div className="flex gap-4">
           <Image
             src={AboutUs.src}
             alt="shipping line picture"
-            width={1000}
-            height={1000}
+            width={500}
+            height={500}
             objectFit="cover"
             objectPosition="center"
-
             className="w-[50%] rounded-md"
           />
           <div className="flex items-center">
