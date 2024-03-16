@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/header';
 import Footer from '@/components/footer';
 import { Theme } from '@radix-ui/themes';
+import Provider from './provider';
 export const metadata: Metadata = {
   title: 'Shipping lines',
   description: 'Shipping lines'
@@ -13,14 +14,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} `}>
-        <Header />
-        <Theme>
-          <main className="mt-[50px] h-[calc(100%-50px)]">{children}</main>
-        </Theme>
-        <Footer />
-        <Toaster />
-      </body>
+      <Provider>
+        <body className={`${inter.className} `}>
+          <Header />
+          <Theme>
+            <main className="mt-[50px] h-[calc(100%-50px)]">{children}</main>
+          </Theme>
+          <Footer />
+          <Toaster />
+        </body>
+      </Provider>
     </html>
   );
 }

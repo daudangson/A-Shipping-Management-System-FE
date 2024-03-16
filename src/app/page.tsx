@@ -6,25 +6,18 @@ import { SearchRoutesForm } from '@/components/forms/form-search-routes';
 export default function Page() {
   return (
     <div className="text-sm">
-      <div className="relative w-full h-screen">
-        <Image
-          src={Shipping.src}
-          fill
-          alt="shipping line picture"
-          className="z-10"
-          objectFit="cover"
-          objectPosition="center"
-        />
+      <div className="relative h-screen w-full">
+        <Image src={Shipping.src} fill alt="shipping line picture" className="z-10 object-cover object-center" />
         <div className="absolute inset-0 z-[1] bg-slate-300" />
       </div>
       <section className="container p-10">
         <div>
-          <h1 className="text-3xl font-bold text-center">SHIPPING LINES</h1>
-          <p className="text-lg text-center">
+          <h1 className="text-center text-3xl font-bold">SHIPPING LINES</h1>
+          <p className="text-center text-lg">
             A world leading container fleet, a service network with disruption-free global coverage.
           </p>
         </div>
-        <div className="flex justify-around mt-10">
+        <div className="mt-10 flex justify-around">
           <div className="text-center">
             <p className="text-2xl font-semibold ">144</p>
             <p className="text-xs text-gray-500">Country/Region</p>
@@ -43,15 +36,10 @@ export default function Page() {
           </div>
         </div>
       </section>
-      <section className="container p-10">
-        <div className="flex flex-col items-center gap-6 mt-10 ">
-          <h1 className="text-3xl font-bold text-center">ROUTES</h1>
-          {/* <SearchRoutesForm /> */}
-        </div>
-      </section>
-      <section className="container p-10 space-y-8">
+
+      <section className="container space-y-8 p-10">
         {/* About us */}
-        <h1 className="text-3xl font-bold text-center">ABOUT US</h1>
+        <h1 className="text-center text-3xl font-bold">ABOUT US</h1>
         <div className="flex gap-4">
           <Image
             src={AboutUs.src}
@@ -60,7 +48,6 @@ export default function Page() {
             height={1000}
             objectFit="cover"
             objectPosition="center"
-
             className="w-[50%] rounded-md"
           />
           <div className="flex items-center">

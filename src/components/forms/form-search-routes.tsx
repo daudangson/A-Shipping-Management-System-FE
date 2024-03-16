@@ -10,8 +10,9 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { toast } from '@/components/ui/use-toast';
-import { useState } from 'react';
-
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 const selects1 = [
   { label: 'Asia-U.S. Southwest Coast', value: 'southwest' },
   { label: 'Asia-U.S. Northwest Coast', value: 'northwest' }
@@ -20,11 +21,6 @@ const selects2 = [
   { label: 'AEM1', value: 'AEM1' },
   { label: 'AEM2', value: 'AEM2' }
 ] as const;
-
-interface Route {
-  route: string;
-  references: String[];
-}
 
 const FormSchema = z.object({
   route: z.string({
@@ -35,37 +31,74 @@ const FormSchema = z.object({
   })
 });
 
-export function SearchRoutesForm({ data, onDataFromChild }: { data: Route[]; onDataFromChild: any }) {
-  const [type, setType] = useState<String[]>();
-  const [route, setRoute] = useState<Route>();
-  const [routeDetail, setRouteDetail] = useState<any>();
+export function SearchRoutesForm({ continentName }: { continentName: string }) {
+  const router = useRouter();
+  const pathname = usePathname();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema)
   });
+  const { data: continents } = useQuery({
+    queryKey: ['routes', continentName],
+    queryFn: async () => {
+      // REAL API CALL
+      //   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/route-mapping/continent/${continent}`, {
+      //     method: 'GET',
+      //     headers: {
+      //       'Content-Type': 'application/json'
+      //     }
+      //   });
+      //   return res.json();
 
+      // DUMMY DATA CALL (for testing ASIA demo only)
+      const res = await import('@/data/DUMMY_DATA.json').then((res) => res.default);
+
+      return res.data;
+    }
+  });
+
+  //   get name select route and select type
+  const transformArrLabelRoute = useMemo(() => {
+    if (continents) {
+      const arr = continents.map((item) => {
+        return {
+          label: item.routeName,
+          value: item.routeId
+        };
+      });
+      return arr;
+    }
+  }, [continents]);
+  const transformArrLabelType = useMemo(() => {
+    if (continents) {
+      const arr = continents.map((item) => {
+        if (item.code) {
+          return {
+            label: item.code,
+            value: item.routeId
+          };
+        }
+      });
+      const uniqueArr = Array.from(new Set(arr.map((item) => item!.label)));
+      return uniqueArr.map((label) => {
+        return arr.find((item) => item!.label === label);
+      });
+    }
+  }, [continents]);
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (type) {
-      const fetchRouteDetail = async () => {
-        const res = await fetch(`http://localhost:3001/api/v1/routes?name=${type}`, {
-          method: 'GET'
-        });
-        const data = await res.json();
-        setRouteDetail(data);
-        onDataFromChild(data);
-      };
-      fetchRouteDetail();
+    // data.route và data.type là 2 cùng giá trị id , nếu nó cùng thì nghĩa là cái 2 select match với nhau ngược lại thì không match
+    if (data.route !== data.type) {
+      toast({
+        description: (
+          <pre className="mt-2 w-[340px] rounded-md bg-white p-2">
+            <code className="font-semibold text-red-500">Route and Type not match</code>
+          </pre>
+        )
+      });
     }
 
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      )
-    });
-
-    // const fetchRoutes = async () => {
+    const params = new URLSearchParams();
+    params.append('search', data.route);
+    return router.push(`${pathname}?${params.toString()}#search-result`);
   }
 
   return (
@@ -84,12 +117,10 @@ export function SearchRoutesForm({ data, onDataFromChild }: { data: Route[]; onD
                       variant="outline"
                       role="combobox"
                       className={cn('w-[300px] justify-between', !field.value && 'text-muted-foreground')}>
-                      {/* {field.value
-                        ? selects1.find((language) => language.value === field.value)?.label
-                        : 'Select route'} */}
                       {field.value
-                        ? data.find((country: Route) => country.route === field.value)?.route
+                        ? (transformArrLabelRoute! ?? []).find((temp) => temp.value === field.value)?.label
                         : 'Select route'}
+
                       <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
@@ -99,36 +130,16 @@ export function SearchRoutesForm({ data, onDataFromChild }: { data: Route[]; onD
                     <CommandInput placeholder="Search framework..." className="h-9" />
                     <CommandEmpty>No route found.</CommandEmpty>
                     <CommandGroup>
-                      {/* {selects1.map((language) => (
+                      {(transformArrLabelRoute! ?? []).map((temp) => (
                         <CommandItem
-                          value={language.label}
-                          key={language.value}
+                          value={temp.label}
+                          key={temp.value}
                           onSelect={() => {
-                            form.setValue('route', language.value);
+                            form.setValue('route', temp.value);
                           }}>
-                          {language.label}
+                          {temp.label}
                           <CheckIcon
-                            className={cn(
-                              'ml-auto h-4 w-4',
-                              language.value === field.value ? 'opacity-100' : 'opacity-0'
-                            )}
-                          />
-                        </CommandItem>
-                      ))} */}
-                      {data.map((country: any) => (
-                        <CommandItem
-                          value={country.route}
-                          key={country.route}
-                          onSelect={() => {
-                            form.setValue('route', country.route);
-                            setRoute(country);
-                          }}>
-                          {country.route}
-                          <CheckIcon
-                            className={cn(
-                              'ml-auto h-4 w-4',
-                              country.route === field.value ? 'opacity-100' : 'opacity-0'
-                            )}
+                            className={cn('ml-auto h-4 w-4', temp.value === field.value ? 'opacity-100' : 'opacity-0')}
                           />
                         </CommandItem>
                       ))}
@@ -155,8 +166,10 @@ export function SearchRoutesForm({ data, onDataFromChild }: { data: Route[]; onD
                       variant="outline"
                       role="combobox"
                       className={cn('w-[300px] justify-between', !field.value && 'text-muted-foreground')}>
-                      {/* {field.value ? selects2.find((language) => language.value === field.value)?.label : 'Select type'} */}
-                      {field.value ? route?.references.find((ref: any) => ref === field.value) : 'Select type'}
+                      {field.value
+                        ? (transformArrLabelType! ?? []).find((temp) => temp!.value === field.value)?.label
+                        : 'Select type'}
+
                       <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </FormControl>
@@ -166,33 +179,16 @@ export function SearchRoutesForm({ data, onDataFromChild }: { data: Route[]; onD
                     <CommandInput placeholder="Search type..." className="h-9" />
                     <CommandEmpty>No route found.</CommandEmpty>
                     <CommandGroup>
-                      {/* {selects2.map((language) => (
+                      {(transformArrLabelType! ?? []).map((temp, index) => (
                         <CommandItem
-                          value={language.label}
-                          key={language.value}
+                          value={temp!.label}
+                          key={index}
                           onSelect={() => {
-                            form.setValue('type', language.value);
+                            form.setValue('type', temp!.value);
                           }}>
-                          {language.label}
+                          {temp!.label}
                           <CheckIcon
-                            className={cn(
-                              'ml-auto h-4 w-4',
-                              language.value === field.value ? 'opacity-100' : 'opacity-0'
-                            )}
-                          />
-                        </CommandItem>
-                      ))} */}
-                      {route?.references?.map((ref: any) => (
-                        <CommandItem
-                          value={ref}
-                          key={ref}
-                          onSelect={() => {
-                            form.setValue('type', ref);
-                            setType(ref);
-                          }}>
-                          {ref}
-                          <CheckIcon
-                            className={cn('ml-auto h-4 w-4', ref === field.value ? 'opacity-100' : 'opacity-0')}
+                            className={cn('ml-auto h-4 w-4', temp!.value === field.value ? 'opacity-100' : 'opacity-0')}
                           />
                         </CommandItem>
                       ))}
