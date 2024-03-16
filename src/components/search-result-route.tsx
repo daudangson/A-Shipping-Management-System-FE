@@ -2,18 +2,32 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
 export default function SearchResultRoute() {
   const searchParams = useSearchParams();
   let routeId = searchParams.get('search');
+  const [routeData, setRouteData] = useState<Array>(null);
+  const [routeName, setRouteName] = useState<string>(null);
 
   const { data } = useQuery({
     queryKey: ['result-search-route', routeId],
     queryFn: async () => {
-      // call data from API here  /port-sequence/route/63e962c5-3cba-48de-957a-520bbdad4eef
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/port-sequence/route/${routeId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await res.json();
+      setRouteData(data.data);
+      setRouteName(data.data[0].route.routeName);
+
+      return data.data;
     },
     enabled: !!routeId
   });
+
 
   return (
     <>
@@ -22,35 +36,25 @@ export default function SearchResultRoute() {
           <div className="mt-10 flex flex-col items-center gap-6 ">
             <h1 className="text-center text-3xl font-bold">
               {/* Please ,  let change name is here (data from api) */}
-              {/* Example */}
-              Test
+              {routeName}
             </h1>
             {/* Image */}
             {/* Change image  */}
-            <div className="min-h-screen w-full bg-red-500"></div>
             <div className="mt-6">
               <div className="relative flex gap-20">
-                {/* Map port is here */}
-                <div className="relative">
-                  <p className="absolute -top-3/4">Test1</p>
-                  <Image
-                    src={'/port.png'}
-                    alt="shipping line picture"
-                    width={31}
-                    height={31}
-                    className="relative z-10  object-cover object-center"
-                  />
-                </div>
-                <div className="relative">
-                  <p className="absolute -top-3/4">Test1</p>
-                  <Image
-                    src={'/port.png'}
-                    alt="shipping line picture"
-                    width={31}
-                    height={31}
-                    className="relative z-10  object-cover object-center"
-                  />
-                </div>
+                {(routeData! ?? []).map((route, index) => (
+                  <div className="relative flex justify-center" key={index}>
+                    <p className="absolute -top-3/4">{route.port.location}</p>
+                    <Image
+                      src={'/port.png'}
+                      alt="shipping line picture"
+                      width={31}
+                      height={31}
+                      className="relative z-10  object-cover object-center"
+                    />
+                  </div>
+                ))}
+
                 {/*End Map port is here */}
                 <div className="relative">
                   <Image

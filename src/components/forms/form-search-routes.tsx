@@ -30,7 +30,6 @@ const FormSchema = z.object({
     required_error: 'Please select a type.'
   })
 });
-
 export function SearchRoutesForm({ continentName }: { continentName: string }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -41,18 +40,14 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
     queryKey: ['routes', continentName],
     queryFn: async () => {
       // REAL API CALL
-      //   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/route-mapping/continent/${continent}`, {
-      //     method: 'GET',
-      //     headers: {
-      //       'Content-Type': 'application/json'
-      //     }
-      //   });
-      //   return res.json();
-
-      // DUMMY DATA CALL (for testing ASIA demo only)
-      const res = await import('@/data/DUMMY_DATA.json').then((res) => res.default);
-
-      return res.data;
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/route-mapping/continent/${continentName}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await res.json();
+      return data.data;
     }
   });
 
@@ -103,7 +98,7 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full items-center justify-center gap-4 ">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="items-left mt-10 flex w-full justify-start gap-20">
         <FormField
           control={form.control}
           name="route"
@@ -116,7 +111,8 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
                     <Button
                       variant="outline"
                       role="combobox"
-                      className={cn('w-[300px] justify-between', !field.value && 'text-muted-foreground')}>
+                      className={cn('w-[300px] justify-between', !field.value && 'text-muted-foreground')}
+                    >
                       {field.value
                         ? (transformArrLabelRoute! ?? []).find((temp) => temp.value === field.value)?.label
                         : 'Select route'}
@@ -136,7 +132,8 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
                           key={temp.value}
                           onSelect={() => {
                             form.setValue('route', temp.value);
-                          }}>
+                          }}
+                        >
                           {temp.label}
                           <CheckIcon
                             className={cn('ml-auto h-4 w-4', temp.value === field.value ? 'opacity-100' : 'opacity-0')}
@@ -165,7 +162,8 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
                     <Button
                       variant="outline"
                       role="combobox"
-                      className={cn('w-[300px] justify-between', !field.value && 'text-muted-foreground')}>
+                      className={cn('w-[300px] justify-between', !field.value && 'text-muted-foreground')}
+                    >
                       {field.value
                         ? (transformArrLabelType! ?? []).find((temp) => temp!.value === field.value)?.label
                         : 'Select type'}
@@ -185,7 +183,8 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
                           key={index}
                           onSelect={() => {
                             form.setValue('type', temp!.value);
-                          }}>
+                          }}
+                        >
                           {temp!.label}
                           <CheckIcon
                             className={cn('ml-auto h-4 w-4', temp!.value === field.value ? 'opacity-100' : 'opacity-0')}
@@ -201,7 +200,7 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="self-end">
+        <Button size="lg" type="submit" className="self-end">
           Search
         </Button>
       </form>

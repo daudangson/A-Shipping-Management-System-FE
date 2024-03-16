@@ -9,7 +9,7 @@ import SearchResultRoute from '@/components/search-result-route';
 export default function Page() {
   return (
     <div className="text-sm">
-      <div className="relative h-screen w-full">
+      <div className="relative h-[300px] w-full">
         <Image
           src={Shipping.src}
           fill
@@ -29,52 +29,6 @@ export default function Page() {
         </div>
       </section>
       <SearchResultRoute />
-      <section className="container space-y-8 p-10">
-        {/* About us */}
-        <h1 className="text-center text-3xl font-bold">ABOUT US</h1>
-        <div className="flex gap-4">
-          <Image
-            src={AboutUs.src}
-            alt="shipping line picture"
-            width={500}
-            height={500}
-            className="w-[50%] rounded-md object-cover object-center"
-          />
-          <div className="flex items-center">
-            <div>
-              <p className="text-xl font-semibold">A world leader company</p>
-              <p>
-                A world leader company We are a world leader company in global container shipping and dedicated to
-                providing efficient transport solutions. We are part of the ABC Group, a world leader in shipping and
-                logistics and pioneer in innovation and digitalisation. We are a world leader company in global
-                container shipping and dedicated to providing efficient transport solutions. We are part of the ABC
-                Group, a world leader in shipping and logistics and pioneer in innovation and digitalisation.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="flex gap-4">
-          <Image
-            src={AboutUs1.src}
-            alt="shipping line picture"
-            width={500}
-            height={500}
-            className="order-1 w-[50%] rounded-md object-cover object-center"
-          />
-          <div className="flex items-center">
-            <div>
-              <p className="text-xl font-semibold">A world leader company</p>
-              <p>
-                We are a world leader company in global container shipping and dedicated to providing efficient
-                transport solutions. We are part of the ABC Group, a world leader in shipping and logistics and pioneer
-                in innovation and digitalisation. We are a world leader company in global container shipping and
-                dedicated to providing efficient transport solutions. We are part of the ABC Group, a world leader in
-                shipping and logistics and pioneer in innovation and digitalisation.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
