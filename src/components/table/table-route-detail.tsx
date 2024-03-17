@@ -1,30 +1,41 @@
-import { Table } from '@radix-ui/themes';
+import { Table, TableCell, TableRow } from '@radix-ui/themes';
+import { TableFooter } from '../ui/table';
 
 export function RouteDetailTable({ data }: { data: any }) {
   return (
-    <Table.Root variant="surface" size="3">
+    <Table.Root variant="surface" size="3" className='mb-36'>
       <Table.Header>
         <Table.Row>
           <Table.ColumnHeaderCell>Port</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Dock</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>ETA</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>ETA Time</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>ETD</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>ETD Time</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Country</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Location</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>latitude</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>longitude</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Type</Table.ColumnHeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
         {data?.map((item: any) => (
           <Table.Row>
-            <Table.RowHeaderCell>{item?.port}</Table.RowHeaderCell>
-            <Table.Cell>{item?.dock}</Table.Cell>
-            <Table.Cell>{item?.eta}</Table.Cell>
-            <Table.Cell>{item?.etaTime}</Table.Cell>
-            <Table.Cell>{item?.etd}</Table.Cell>
-            <Table.Cell>{item?.etdTime}</Table.Cell>
+            <Table.RowHeaderCell>{item?.port.portName}</Table.RowHeaderCell>
+            <Table.Cell>{item?.port.country}</Table.Cell>
+            <Table.Cell>{item?.port.location}</Table.Cell>
+            <Table.Cell>{item?.port.latitude}</Table.Cell>
+            <Table.Cell>{item?.port.longitude}</Table.Cell>
+            <Table.Cell>{item?.port.type}</Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
+      <TableFooter>
+        <TableRow>
+          <TableCell colSpan={5}>Time Estimate</TableCell>
+          <TableCell>{data && data[0] && data[0].route && data[0].route.estimatedDuration} days</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell colSpan={5}>Price Estimate</TableCell>
+          <TableCell>${data && data[0] && data[0].route && data[0].route.price}</TableCell>
+        </TableRow>
+      </TableFooter>
     </Table.Root>
   );
 }

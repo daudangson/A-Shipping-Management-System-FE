@@ -58,42 +58,24 @@ export function Header() {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link href="/docs" legacyBehavior passHref>
+              <Link href="" legacyBehavior passHref>
                 <NavigationMenuLink>
                   <h2 className="text-xl font-semibold">Shipping lines</h2>
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="bg-transparent">Our service</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid gap-2 p-2 md:w-[200px] lg:w-[400px] lg:grid-cols-[0.5fr_1fr]">
-                  <li className="row-[span_7_/_span_7]">
-                    <NavigationMenuLink asChild className="bg-none">
-                      <a
-                        className="flex h-full w-full select-none flex-col justify-center rounded-md bg-gradient-to-b from-muted/50 to-muted p-4 no-underline outline-none focus:shadow-md"
-                        href="/">
-                        <div className="mb-2 mt-4 text-lg font-medium">Routes</div>
-                      </a>
-                    </NavigationMenuLink>
-                  </li>
-                  <ListItem href="/docs" title="Trans-Pacific" />
-                  <ListItem href="/docs/installation" title="Europe" />
-                  <ListItem href="" title="Europe Feeder" />
-                  <ListItem href="" title="Trans-Atlantic" />
-                  <ListItem href="" title="Asian Pacific" />
-                  <ListItem href="" title="Latin America/Africa" />
-                  <ListItem href="" title="Latin America Regional Service" />
-                </ul>
-              </NavigationMenuContent>
+              <Link href="/route" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Route Mapping</NavigationMenuLink>
+              </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/docs" legacyBehavior passHref>
+              <Link href="" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/docs" legacyBehavior passHref>
+              <Link href="" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>News</NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
@@ -117,7 +99,8 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
               'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
               className
             )}
-            {...props}>
+            {...props}
+          >
             <div className="text-sm font-medium leading-none">{title}</div>
             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
           </a>
