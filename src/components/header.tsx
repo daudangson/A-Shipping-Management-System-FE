@@ -70,6 +70,11 @@ export function Header() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
+              <Link href="/tracking" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Tracking</NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
               <Link href="" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>About</NavigationMenuLink>
               </Link>
@@ -99,8 +104,7 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
               'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
               className
             )}
-            {...props}
-          >
+            {...props}>
             <div className="text-sm font-medium leading-none">{title}</div>
             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">{children}</p>
           </a>

@@ -34,8 +34,8 @@ export default function SearchResultRoute() {
       {routeId && (
         <div>
           <section className="container p-10">
-            <div className="mt-10 flex flex-col items-center gap-6 ">
-              <h1 className="text-center text-3xl font-bold">
+            <div className="flex flex-col items-center gap-6 mt-10 ">
+              <h1 className="text-3xl font-bold text-center">
                 {/* Please ,  let change name is here (data from api) */}
                 {routeName}
               </h1>
