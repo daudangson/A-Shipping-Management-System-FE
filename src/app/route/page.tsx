@@ -1,8 +1,5 @@
 import Image from 'next/image';
 import Shipping from '../../../public/shipping.jpg';
-import AboutUs from '../../../public/about-us.jpg';
-import AboutUs1 from '../../../public/about-us1.jpg';
-import { SearchRoutesForm } from '@/components/forms/form-search-routes';
 import ContinentTabs from '@/components/continent-tabs';
 import SearchResultRoute from '@/components/search-result-route';
 
