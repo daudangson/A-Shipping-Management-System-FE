@@ -14,7 +14,7 @@ export default function SearchResultRoute() {
   const { data } = useQuery({
     queryKey: ['result-search-route', routeId],
     queryFn: async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/port-sequence/route/${routeId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/route/port-sequence/route/${routeId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ export default function SearchResultRoute() {
                         alt="shipping line picture"
                         width={31}
                         height={31}
-                        className="relative z-10  object-cover object-center"
+                        className="relative z-10 object-cover object-center"
                       />
                     </div>
                   ))}
@@ -63,7 +63,7 @@ export default function SearchResultRoute() {
                       alt="shipping line picture"
                       width={49}
                       height={31}
-                      className="relative z-10  object-cover object-center"
+                      className="relative z-10 object-cover object-center"
                     />
                   </div>
                   <div className="absolute left-0 right-1 top-1/2 z-[1] h-1 bg-blue-600  " />
@@ -72,7 +72,7 @@ export default function SearchResultRoute() {
             </div>
           </section>
           <section className="container p-10">
-            <RouteDetailTable data={routeData}/>
+            <RouteDetailTable data={routeData} />
           </section>
         </div>
       )}

@@ -40,7 +40,7 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
     queryKey: ['routes', continentName],
     queryFn: async () => {
       // REAL API CALL
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/route-mapping/continent/${continentName}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/route/route-mapping/continent/${continentName}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="items-left mt-10 flex w-full justify-start gap-20">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-start w-full gap-20 mt-10 items-left">
         <FormField
           control={form.control}
           name="route"
@@ -117,7 +117,7 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
                         ? (transformArrLabelRoute! ?? []).find((temp) => temp.value === field.value)?.label
                         : 'Select route'}
 
-                      <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      <CaretSortIcon className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
@@ -168,7 +168,7 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
                         ? (transformArrLabelType! ?? []).find((temp) => temp!.value === field.value)?.label
                         : 'Select type'}
 
-                      <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      <CaretSortIcon className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
