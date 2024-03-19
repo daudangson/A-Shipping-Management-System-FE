@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { RouteDetailTable } from './table/table-route-detail';
 
 export default function SearchResultRoute() {

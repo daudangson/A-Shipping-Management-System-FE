@@ -11,8 +11,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { toast } from '@/components/ui/use-toast';
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { isNull } from 'util';
 const selects1 = [
   { label: 'Asia-U.S. Southwest Coast', value: 'southwest' },
   { label: 'Asia-U.S. Northwest Coast', value: 'northwest' }
@@ -40,7 +41,7 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
     queryKey: ['routes', continentName],
     queryFn: async () => {
       // REAL API CALL
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/route-mapping/continent/${continentName}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/route/route-mapping/continent/${continentName}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -51,24 +52,27 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
     }
   });
 
+  const [route, setRoute] = useState(null);
+  const [routeName, setRouteName] = useState<String>(null);
   //   get name select route and select type
   const transformArrLabelRoute = useMemo(() => {
     if (continents) {
       const arr = continents.map((item) => {
         return {
           label: item.routeName,
-          value: item.routeId
+          value: item.routeName
         };
       });
       return arr;
     }
   }, [continents]);
   const transformArrLabelType = useMemo(() => {
-    if (continents) {
-      const arr = continents.map((item) => {
-        if (item.code) {
+    if (route !== undefined && route !== null) {
+      console.log(route)
+      const arr = route.map((item) => {
+        if (item.routeCode) {
           return {
-            label: item.code,
+            label: item.routeCode,
             value: item.routeId
           };
         }
@@ -78,21 +82,44 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
         return arr.find((item) => item!.label === label);
       });
     }
-  }, [continents]);
+    else return []
+    // if (codeData) {
+    //   const arr = codeData.map((item) => {
+    //     if (item.routeCode) {
+    //       return {
+    //         label: item.routeCode,
+    //         value: item.routeName
+    //       };
+    //     }
+    //   });
+    //   const uniqueArr = Array.from(new Set(arr.map((item) => item!.label)));
+    //   return uniqueArr.map((label) => {
+    //     return arr.find((item) => item!.label === label);
+    //   });
+    // }
+  }, [route]);
+
+  useEffect(() => {
+    const fetchRouteCodeData = async () => {
+      // REAL API CALL
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/route/route-mapping/code-by-name/${routeName}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await res.json();
+      setRoute(data.data)
+    };
+
+    fetchRouteCodeData();
+  }, [routeName]);
   function onSubmit(data: z.infer<typeof FormSchema>) {
     // data.route và data.type là 2 cùng giá trị id , nếu nó cùng thì nghĩa là cái 2 select match với nhau ngược lại thì không match
-    if (data.route !== data.type) {
-      toast({
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-white p-2">
-            <code className="font-semibold text-red-500">Route and Type not match</code>
-          </pre>
-        )
-      });
-    }
+    console.log('submit: ', data)
 
     const params = new URLSearchParams();
-    params.append('search', data.route);
+    params.append('search', data.type);
     return router.push(`${pathname}?${params.toString()}#search-result`);
   }
 
@@ -132,6 +159,8 @@ export function SearchRoutesForm({ continentName }: { continentName: string }) {
                           key={temp.value}
                           onSelect={() => {
                             form.setValue('route', temp.value);
+                            setRouteName(temp.value);
+                            console.log('route', temp.value);
                           }}
                         >
                           {temp.label}
