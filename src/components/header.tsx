@@ -86,8 +86,9 @@ export function Header() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-
-        <Button variant="default">Explore</Button>
+        <Link href={`${process.env.NEXT_PUBLIC_ADMIN_PAGE_URL}/signin`}>
+          <Button variant="default">Login</Button>
+        </Link>
       </div>
     </header>
   );
